@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/analyze", "dest": "/analyze.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/api/analyze", "destination": "/api/analyze" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
