@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accurawcy · Análisis objetivo de cartas Pokémon</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,200;0,500;0,200;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
@@ -566,15 +566,30 @@ function handleFile(side, input) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (e) => {
-    const dataUrl = e.target.result;
-    state[side] = { preview: dataUrl, base64: dataUrl.split(',')[1], mediaType: file.type };
-    const prev = document.getElementById('prev-' + side);
-    prev.src = dataUrl;
-    prev.style.display = 'block';
-    document.getElementById('dz-' + side + '-empty').style.display = 'none';
-    document.getElementById('check-' + side).style.display = 'flex';
-    document.getElementById('dz-' + side).classList.add('has-image');
-    updateBtn();
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      // Keep good resolution for analysis but limit file size
+      const MAX = 1000;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      // Try quality 0.7, if still too big reduce further
+      let dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      if (dataUrl.length > 1500000) dataUrl = canvas.toDataURL('image/jpeg', 0.5);
+      if (dataUrl.length > 1500000) dataUrl = canvas.toDataURL('image/jpeg', 0.3);
+      state[side] = { preview: dataUrl, base64: dataUrl.split(',')[1], mediaType: 'image/jpeg' };
+      const prev = document.getElementById('prev-' + side);
+      prev.src = dataUrl;
+      prev.style.display = 'block';
+      document.getElementById('dz-' + side + '-empty').style.display = 'none';
+      document.getElementById('check-' + side).style.display = 'flex';
+      document.getElementById('dz-' + side).classList.add('has-image');
+      updateBtn();
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
