@@ -321,20 +321,23 @@ footer{border-top:1px solid var(--border);padding:24px 40px;
 
 /* ── CAMERA UI ── */
 .cam-card{background:var(--s1);border:1px solid var(--border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
-.cam-preview-wrap{position:relative;min-height:180px;display:flex;align-items:center;justify-content:center;background:var(--s2);flex:1}
+.cam-preview-wrap{position:relative;min-height:190px;display:flex;align-items:center;justify-content:center;background:var(--s2);flex:1}
 .cam-placeholder{text-align:center;padding:20px}
-.cam-btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;
-  font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .2s}
-.cam-btn-primary:hover{background:linear-gradient(135deg,var(--blue2),#2a80e0)}
-.cam-btn-secondary{display:block;width:100%;padding:8px;background:transparent;color:var(--muted);
-  border:none;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;
-  letter-spacing:1px;cursor:pointer;text-align:center;transition:all .2s}
-.cam-btn-secondary:hover{color:var(--text2)}
+.cam-actions{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.cam-btn-primary{padding:14px 10px;background:var(--blue);color:#fff;border:none;
+  font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:1.5px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.cam-btn-primary:hover{background:var(--blue2)}
+.cam-btn-secondary{padding:14px 10px;background:transparent;color:var(--muted);border:none;
+  border-left:1px solid var(--border);font-family:var(--cond);font-size:14px;font-weight:600;
+  letter-spacing:1px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.cam-btn-secondary:hover{color:var(--text2);background:rgba(255,255,255,.04)}
 
-.photo-tips{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;
-  background:rgba(26,86,160,.08);border:1px solid rgba(26,86,160,.2);border-radius:4px;
-  margin-bottom:14px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.5}
-.tip-icon{flex-shrink:0;font-size:14px}
+.photo-tips{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
+  background:rgba(26,86,160,.06);border:1px solid rgba(26,86,160,.15);border-radius:4px;
+  margin-bottom:14px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.6;letter-spacing:.3px}
+.tip-icon{flex-shrink:0;font-size:13px;margin-top:1px}
 
 /* Camera Modal */
 .cam-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;
@@ -460,11 +463,10 @@ footer{border-top:1px solid var(--border);padding:24px 40px;
               <div class="dz-check" id="check-front" style="display:none">✓</div>
               <div class="dz-side-label">FRONT</div>
             </div>
-            <button class="cam-btn-primary" onclick="openCamera('front')">📷 Usar cámara</button>
-            <label class="cam-btn-secondary">
-              🖼 Galería
-              <input type="file" accept="image/*" id="inp-front" onchange="handleFile('front',this)" style="display:none">
-            </label>
+            <div class="cam-actions">
+              <button class="cam-btn-primary" onclick="openCamera('front')">📷 Cámara</button>
+              <label class="cam-btn-secondary">🖼 Galería<input type="file" accept="image/*" id="inp-front" onchange="handleFile('front',this)" style="display:none"></label>
+            </div>
           </div>
 
           <!-- BACK -->
@@ -478,11 +480,10 @@ footer{border-top:1px solid var(--border);padding:24px 40px;
               <div class="dz-check" id="check-back" style="display:none">✓</div>
               <div class="dz-side-label">BACK</div>
             </div>
-            <button class="cam-btn-primary" onclick="openCamera('back')">📷 Usar cámara</button>
-            <label class="cam-btn-secondary">
-              🖼 Galería
-              <input type="file" accept="image/*" id="inp-back" onchange="handleFile('back',this)" style="display:none">
-            </label>
+            <div class="cam-actions">
+              <button class="cam-btn-primary" onclick="openCamera('back')">📷 Cámara</button>
+              <label class="cam-btn-secondary">🖼 Galería<input type="file" accept="image/*" id="inp-back" onchange="handleFile('back',this)" style="display:none"></label>
+            </div>
           </div>
         </div>
 
@@ -679,7 +680,7 @@ let stabilityTimer = null;
 let stabilityFrames = 0;
 let lastFrameData = null;
 let stabilityInterval = null;
-const STABILITY_NEEDED = 20; // frames estables necesarios (~1 segundo)
+const STABILITY_NEEDED = 60; // frames estables necesarios (~3 segundos)
 
 async function openCamera(side) {
   camSide = side;
